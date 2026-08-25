@@ -5,15 +5,13 @@ from PIL import Image
 st.title("🤖 JEE AI DOUBT SOLVER")
 st.write("Upload or scan a Physics, Chemistry, or Maths question to get an instant step-by-step solution.")
 
-# --- स्टेप 1: एआई की सेटिंग्स (API Keys Permanently Configured) ---
-# यहाँ आपकी दोनों चाबियाँ सुरक्षित बैकअप के साथ सेट कर दी गई हैं
-api_keys = [
-    "AIzaSyAQ_Ab8RN6KtfgoXbMNp7C5QgTpI6OMwdle_UMG4SBTBezmwyYfG1w",
-    "AIzaSyAQ_Ab8RN6IoJyf-20xdXlU8Rzc_EKaxc5zqpywQmj-0Mk-lJArfqg"
-]
-
-# पहली की (Primary Key) से कॉन्फ़िगरेशन शुरू करना
-genai.configure(api_key=api_keys[0])
+# --- स्टेप 1: एआई की सेटिंग्स (Streamlit Secrets से सुरक्षित लोड) ---
+try:
+    # यह लाइव सर्वर की सेटिंग्स से सुरक्षित तरीके से की (Key) उठाएगा
+    api_key = st.secrets["GEMINI_API_KEY"]
+    genai.configure(api_key=api_key)
+except Exception:
+    st.error("API Key not found in Streamlit Secrets. Please configure it in your Streamlit Dashboard.")
 
 # --- स्टेप 2: कैमरा और इमेज इनपुट ---
 st.write("---")
@@ -34,7 +32,6 @@ if target_image is not None:
     if st.button("Solve with AI"):
         st.write("🔄 Analyzing the question and generating solution...")
         
-        # मुख्य मॉडल रन करने की कोशिश
         try:
             model = genai.GenerativeModel('gemini-2.5-flash')
             
@@ -52,16 +49,7 @@ if target_image is not None:
             st.write(response.text)
             
         except Exception as e:
-            # अगर पहली की फेल होती है, तो दूसरी बैकअप की आज़माएँ
-            try:
-                st.write("⏳ Retrying with backup server configuration...")
-                genai.configure(api_key=api_keys[1])
-                model = genai.GenerativeModel('gemini-2.5-flash')
-                response = model.generate_content([prompt, target_image])
-                
-                st.write("---")
-                st.write("### 📝 Step-by-Step Solution:")
-                st.write(response.text)
-            except Exception as backup_error:
-                st.error(f"An error occurred while connecting to AI: {backup_error}")
+            st.error(f"An error occurred while connecting to AI: {e}")
+
+
 
