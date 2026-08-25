@@ -33,7 +33,8 @@ if target_image is not None:
         st.write("🔄 Analyzing the question and generating solution...")
         
         try:
-            model = genai.GenerativeModel('gemini-2.5-flash')
+            # एरर के अनुसार यहाँ नया मॉडल 'gemini-3.6-flash' सेट कर दिया गया है
+            model = genai.GenerativeModel('gemini-3.6-flash')
             
             prompt = (
                 "You are an expert IIT-JEE professor. Analyze this image carefully. "
@@ -50,6 +51,7 @@ if target_image is not None:
             
         except Exception as e:
             st.error(f"An error occurred while connecting to AI: {e}")
+
 
 
 
