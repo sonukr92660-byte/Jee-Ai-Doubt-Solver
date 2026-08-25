@@ -36,8 +36,8 @@ if target_image is not None:
             st.write("🔄 Analyzing the question and generating solution...")
             
             try:
-                # जेमिनी फ्लैश मॉडल जो इमेज को प्रोसेस कर सकता है
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                # यहाँ हमने पुराना मॉडल बदलकर नया 'gemini-2.5-flash' कर दिया है
+                model = genai.GenerativeModel('gemini-2.5-flash')
                 
                 prompt = (
                     "You are an expert IIT-JEE professor. Analyze this image carefully. "
@@ -54,3 +54,4 @@ if target_image is not None:
                 
             except Exception as e:
                 st.error(f"An error occurred while connecting to AI: {e}")
+
